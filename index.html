@@ -9,8 +9,10 @@
 <body>
     <h1>Firestore CRUD Example</h1>
 
-    <input id="name" placeholder="Name">
+    <input id="fullname" placeholder="Name">
     <input id="age" type="number" placeholder="Age">
+    <input id="gmail" type="email" placeholder="gmail">
+    <input id="password" type="password" placeholder="password">
     <button onclick="addUser()">Add User</button>
     <button onclick="getUsers()">Get Users</button>
     <hr>
@@ -24,75 +26,78 @@
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc }
             from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
+
         // ✅ کانفیگ درست شده
         const firebaseConfig = {
-            apiKey: "AIzaSyAQ0cdt12nzCNe0ggpuTIhtTAqPiFRMHHY",
-            authDomain: "firstline-b110b.firebaseapp.com",
-            projectId: "firstline-b110b",
-            storageBucket: "firstline-b110b.firebasestorage.app",
-            messagingSenderId: "639931418304",
-            appId: "1:639931418304:web:ea5e15fa4be634f4eecf25",
-            measurementId: "G-66WLG1VZPF"
+            apiKey: "AIzaSyBGfegTxLvnp-N7JEOw2jDBmoyPosyhHtw",
+            authDomain: "star-7446c.firebaseapp.com",
+            projectId: "star-7446c",
+            storageBucket: "star-7446c.firebasestorage.app",
+            messagingSenderId: "1079272879847",
+            appId: "1:1079272879847:web:ba1ece1db93d86a23cd442",
+            measurementId: "G-8YSV40VRT1"
         };
+
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         const usersList = document.getElementById("usersList");
+        ///////////////////////////////
 
-        // 🔹 CREATE
+
+
         window.addUser = async function () {
-            const name = document.getElementById("name").value;
-            const age = document.getElementById("age").value;
+            try {
+                const fullname = document.getElementById("fullname").value;
+                const age = document.getElementById("age").value;
+                const gmail = document.getElementById("gmail").value;
+                const password = document.getElementById("password").value;
 
-            await addDoc(collection(db, "users"), {
-                name: name,
-                age: parseInt(age)
-            });
+                await addDoc(collection(db, 'users'), {
+                    fullname: fullname,
+                    age: parseInt(age),
+                    gmail: gmail,
+                    password: password
+                });
+                alert("✅ User Added")
+                console.log("✅ User Added");
 
-            alert("User added!");
-            getUsers();
+                getUsers()
+
+            } catch (error) {
+                console.error("❌ Error adding user:", error);
+            }
         }
-
-        // 🔹 READ
         window.getUsers = async function () {
-            usersList.innerHTML = "";
-            const querySnapshot = await getDocs(collection(db, "users"));
+            try {
+                const allData = await getDocs(collection(db, 'users'))
+                allData.forEach((val) => {
+                    const userData = val.data()
 
-            querySnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const li = document.createElement("li");
-                li.innerHTML = `${data.name} (${data.age} years) 
-                    <button onclick="updateUser('${docSnap.id}')">Update</button> 
-                    <button onclick="deleteUser('${docSnap.id}')">Delete</button>`;
-                usersList.appendChild(li);
-            });
+                    const li = document.createElement('li')
+                    li.innerHTML = `
+                     <p>${userData.fullname}</p>
+                     <p>${userData.age}</p>
+                     <p>${userData.password}</p>
+                     <p>${userData.gmail}</p>
+                     <button onclick="updateUser('${userData.id}')">Update</button> 
+                     <button onclick="deleteUser('${userData.id}')">Delete</button>;
+                   `
+                    usersList.appendChild(li);
+                });
+
+            } catch (error) {
+                console.error("❌ Error getting user:", error);
+            }
         }
 
-        // 🔹 UPDATE
-        window.updateUser = async function (id) {
-            const newName = prompt("Enter new name:");
-            const newAge = prompt("Enter new age:");
-            const userRef = doc(db, "users", id);
 
-            await updateDoc(userRef, {
-                name: newName,
-                age: parseInt(newAge)
-            });
 
-            alert("User updated!");
-            getUsers();
-        }
 
-        // 🔹 DELETE
-        window.deleteUser = async function (id) {
-            await deleteDoc(doc(db, "users", id));
-            alert("User deleted!");
-            getUsers();
-        }
 
-        // Load users on page load
-        // getUsers();
+
+
     </script>
 </body>
 
