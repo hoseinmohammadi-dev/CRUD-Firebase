@@ -2,6 +2,10 @@
 
 **CRUD-Firebase** is a simple web application built with HTML, CSS, and JavaScript that connects to Firebase to perform CRUD operations (Create, Read, Update, Delete) on data. This project is designed for learning and practicing Firebase.
 
+
+<img width="1917" height="865" alt="Image" src="https://github.com/user-attachments/assets/d0251a00-efd5-4cfa-9dc0-1363720ba191" />
+<img width="1918" height="866" alt="Image" src="https://github.com/user-attachments/assets/5de128d1-fa5f-4a24-b0bc-70f151d38143" />
+
 ## Features
 
 - **Create**: Add new data to the database
