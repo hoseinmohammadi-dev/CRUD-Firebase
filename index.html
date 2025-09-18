@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Firestore CRUD Example</title>
    <link rel="stylesheet" href="css/master.css">
 </head>
-
 <body>
     <h1>Firestore CRUD Example</h1>
-
     <input id="fullname" placeholder="Name">
     <input id="age" type="number" placeholder="Age">
     <input id="gmail" type="email" placeholder="Gmail">
@@ -17,12 +14,7 @@
     <button onclick="addUser()">Add User</button>
     <button onclick="getUsers()">Get Users</button>
     <input type="text" id="search" placeholder="Search">
-
-    <hr>
-
-    <h3>Users:</h3>
     <ul id="usersList"></ul>
-
 
     <!-- Popup -->
     <div class="pop-up">
@@ -31,19 +23,16 @@
         <input id="new-age" type="number" placeholder="New Age">
         <input id="new-gmail" type="email" placeholder="New Gmail">
         <input id="new-password" type="password" placeholder="New Password">
-
         <div class="actions">
             <button onclick="newUpdateUser()">Update User</button>
             <button class="close-btn" onclick="closePopup()">Close</button>
         </div>
     </div>
-
     <!-- Loading -->
     <div class="loading-overlay" id="loading">
         <div class="loader"></div>
     </div>
 </body>
-
 <!-- Firebase SDK -->
 <script src="js/main.js" type="module"></script>
 </html>

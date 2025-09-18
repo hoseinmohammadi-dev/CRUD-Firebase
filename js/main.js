@@ -61,6 +61,7 @@
             });
             renderUsers(allUsers);
         } catch (error) {
+            alert("Turn on your VPN")
             console.error("❌ Error getting users:", error);
         }
         hideLoading();
@@ -129,7 +130,7 @@
         showLoading();
         try {
             await deleteDoc(doc(db, "users", id));
-            alert("User deleted");
+            alert("User deleted❌");
             getUsers();
         } catch (error) {
             console.error("❌ Error deleting user:", error);
