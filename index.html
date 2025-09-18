@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Firestore CRUD Example</title>
+</head>
+
+<body>
+    <h1>Firestore CRUD Example</h1>
+
+    <input id="name" placeholder="Name">
+    <input id="age" type="number" placeholder="Age">
+    <button onclick="addUser()">Add User</button>
+    <button onclick="getUsers()">Get Users</button>
+    <hr>
+
+    <h3>Users:</h3>
+    <ul id="usersList"></ul>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc }
+            from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+        // ✅ کانفیگ درست شده
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQ0cdt12nzCNe0ggpuTIhtTAqPiFRMHHY",
+            authDomain: "firstline-b110b.firebaseapp.com",
+            projectId: "firstline-b110b",
+            storageBucket: "firstline-b110b.firebasestorage.app",
+            messagingSenderId: "639931418304",
+            appId: "1:639931418304:web:ea5e15fa4be634f4eecf25",
+            measurementId: "G-66WLG1VZPF"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const usersList = document.getElementById("usersList");
+
+        // 🔹 CREATE
+        window.addUser = async function () {
+            const name = document.getElementById("name").value;
+            const age = document.getElementById("age").value;
+
+            await addDoc(collection(db, "users"), {
+                name: name,
+                age: parseInt(age)
+            });
+
+            alert("User added!");
+            getUsers();
+        }
+
+        // 🔹 READ
+        window.getUsers = async function () {
+            usersList.innerHTML = "";
+            const querySnapshot = await getDocs(collection(db, "users"));
+
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const li = document.createElement("li");
+                li.innerHTML = `${data.name} (${data.age} years) 
+                    <button onclick="updateUser('${docSnap.id}')">Update</button> 
+                    <button onclick="deleteUser('${docSnap.id}')">Delete</button>`;
+                usersList.appendChild(li);
+            });
+        }
+
+        // 🔹 UPDATE
+        window.updateUser = async function (id) {
+            const newName = prompt("Enter new name:");
+            const newAge = prompt("Enter new age:");
+            const userRef = doc(db, "users", id);
+
+            await updateDoc(userRef, {
+                name: newName,
+                age: parseInt(newAge)
+            });
+
+            alert("User updated!");
+            getUsers();
+        }
+
+        // 🔹 DELETE
+        window.deleteUser = async function (id) {
+            await deleteDoc(doc(db, "users", id));
+            alert("User deleted!");
+            getUsers();
+        }
+
+        // Load users on page load
+        // getUsers();
+    </script>
+</body>
+
+</html>
