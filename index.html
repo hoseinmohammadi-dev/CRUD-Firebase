@@ -4,6 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Firestore CRUD Example</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .pop-up {
+            position: absolute;
+            z-index: 999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid black;
+            width: 500px;
+            height: 300px;
+            background-color: #cfcfcf;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,85 +40,127 @@
     <h3>Users:</h3>
     <ul id="usersList"></ul>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc }
-            from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-
-        // ✅ کانفیگ درست شده
-        const firebaseConfig = {
-            apiKey: "AIzaSyBGfegTxLvnp-N7JEOw2jDBmoyPosyhHtw",
-            authDomain: "star-7446c.firebaseapp.com",
-            projectId: "star-7446c",
-            storageBucket: "star-7446c.firebasestorage.app",
-            messagingSenderId: "1079272879847",
-            appId: "1:1079272879847:web:ba1ece1db93d86a23cd442",
-            measurementId: "G-8YSV40VRT1"
-        };
-
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const usersList = document.getElementById("usersList");
-        ///////////////////////////////
-
-
-
-        window.addUser = async function () {
-            try {
-                const fullname = document.getElementById("fullname").value;
-                const age = document.getElementById("age").value;
-                const gmail = document.getElementById("gmail").value;
-                const password = document.getElementById("password").value;
-
-                await addDoc(collection(db, 'users'), {
-                    fullname: fullname,
-                    age: parseInt(age),
-                    gmail: gmail,
-                    password: password
-                });
-                alert("✅ User Added")
-                console.log("✅ User Added");
-
-                getUsers()
-
-            } catch (error) {
-                console.error("❌ Error adding user:", error);
-            }
-        }
-        window.getUsers = async function () {
-            try {
-                const allData = await getDocs(collection(db, 'users'))
-                allData.forEach((val) => {
-                    const userData = val.data()
-
-                    const li = document.createElement('li')
-                    li.innerHTML = `
-                     <p>${userData.fullname}</p>
-                     <p>${userData.age}</p>
-                     <p>${userData.password}</p>
-                     <p>${userData.gmail}</p>
-                     <button onclick="updateUser('${userData.id}')">Update</button> 
-                     <button onclick="deleteUser('${userData.id}')">Delete</button>;
-                   `
-                    usersList.appendChild(li);
-                });
-
-            } catch (error) {
-                console.error("❌ Error getting user:", error);
-            }
-        }
-
-
-
-
-
-
-
-    </script>
+    <div class="pop-up">
+        <input id="new-fullname" placeholder="new-Name">
+        <input id="new-age" type="number" placeholder="new-Age">
+        <input id="new-gmail" type="email" placeholder="new-gmail">
+        <input id="new-password" type="password" placeholder="new-password">
+        <button onclick="newUpdateUser()">Update Users</button>
+    </div>
 </body>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc }
+        from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+
+    // ✅ کانفیگ درست شده
+    const firebaseConfig = {
+        apiKey: "AIzaSyBGfegTxLvnp-N7JEOw2jDBmoyPosyhHtw",
+        authDomain: "star-7446c.firebaseapp.com",
+        projectId: "star-7446c",
+        storageBucket: "star-7446c.firebasestorage.app",
+        messagingSenderId: "1079272879847",
+        appId: "1:1079272879847:web:ba1ece1db93d86a23cd442",
+        measurementId: "G-8YSV40VRT1"
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const usersList = document.getElementById("usersList");
+    ///////////////////////////////
+
+
+
+    window.addUser = async function () {
+        try {
+            const fullname = document.getElementById("fullname").value;
+            const age = document.getElementById("age").value;
+            const gmail = document.getElementById("gmail").value;
+            const password = document.getElementById("password").value;
+
+            await addDoc(collection(db, 'users'), {
+                fullname: fullname,
+                age: parseInt(age),
+                gmail: gmail,
+                password: password
+            });
+            alert("✅ User Added")
+            console.log("✅ User Added");
+
+            getUsers()
+
+        } catch (error) {
+            console.error("❌ Error adding user:", error);
+        }
+    }
+
+    let currentId = null;
+    window.getUsers = async function () {
+        usersList.innerHTML = "";
+        try {
+            const allData = await getDocs(collection(db, 'users'))
+            allData.forEach((val) => {
+                const userData = val.data()
+                const li = document.createElement('li')
+
+                li.innerHTML = `
+                <p>${userData.fullname}</p>
+                <p>${userData.age}</p>
+                <p>${userData.password}</p>
+                <p>${userData.gmail}</p>
+                <button onclick="updateUser('${val.id}')">Update</button>
+                <button onclick="deleteUser('${val.id}')">Delete</button>
+            `
+                usersList.appendChild(li);
+            });
+        } catch (error) {
+            console.error("❌ Error getting user:", error);
+        }
+    }
+
+    window.newUpdateUser = async function () {
+        try {
+            const newFullname = document.getElementById("new-fullname").value;
+            const newAge = document.getElementById("new-age").value;
+            const newEmail = document.getElementById("new-gmail").value;
+            const newPassword = document.getElementById("new-password").value;
+
+            const userRef = doc(db, "users", currentId);
+
+            await updateDoc(userRef, {
+                fullname: newFullname,
+                age: parseInt(newAge),
+                gmail: newEmail,
+                password: newPassword
+            });
+
+            alert("✅ User updated");
+            document.querySelector(".pop-up").style.display = "none";
+            getUsers();
+
+        } catch (error) {
+            console.error("❌ Error updating user:", error);
+        }
+    }
+
+    window.updateUser = async function (id) {
+        currentId = id;
+        const pop = document.querySelector(".pop-up")
+        pop.style.display = "block"
+    }
+
+    window.deleteUser = async function(id) {
+        await deleteDoc(doc(db , "users" , id));
+        alert("User deleted");
+        getUsers();
+    }
+
+</script>
+
 
 </html>
