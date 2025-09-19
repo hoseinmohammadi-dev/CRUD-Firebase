@@ -138,3 +138,80 @@ ul li button:last-child {
         transform: rotate(360deg);
     }
 }
+
+
+/* footer */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    padding: 50px 20px;
+}
+
+.title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #555;
+    margin: 15px 0 40px;
+}
+
+.designers {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .card {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.253);
+
+        img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .info {
+            flex: 1;
+
+            .name {
+                font-weight: 600;
+                font-size: 18px;
+            }
+
+            .role {
+                font-size: 14px;
+                color: #777;
+            }
+        }
+
+        .socials {
+            display: flex;
+            gap: 10px;
+
+            a {
+                text-decoration: none;
+                font-size: 18px;
+                color: #555;
+                transition: 0.2s;
+            }
+
+            a:hover {
+                color: #000;
+            }
+        }
+    }
+}
