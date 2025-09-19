@@ -2,7 +2,6 @@
     import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc }
         from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-
     const firebaseConfig = {
         apiKey: "AIzaSyBGfegTxLvnp-N7JEOw2jDBmoyPosyhHtw",
         authDomain: "star-7446c.firebaseapp.com",
@@ -20,8 +19,17 @@
     let currentId = null;
     let allUsers = [];
 
+    function showLoading() {
+        document.getElementById('loading').style.display = 'flex';
+    }
+
+    function hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+    }
+
     // Add User
     window.addUser = async function () {
+        showLoading();
         try {
             const fullname = document.getElementById("fullname").value;
             const age = document.getElementById("age").value;
@@ -39,10 +47,12 @@
         } catch (error) {
             console.error("❌ Error adding user:", error);
         }
+        hideLoading();
     };
 
     // Get Users
     window.getUsers = async function () {
+        showLoading();
         try {
             const snapshot = await getDocs(collection(db, 'users'));
             allUsers = [];
@@ -53,6 +63,7 @@
         } catch (error) {
             console.error("❌ Error getting users:", error);
         }
+        hideLoading();
     };
 
     // Render Users
@@ -87,7 +98,9 @@
         document.querySelector(".pop-up").style.display = "block";
     };
 
+
     window.newUpdateUser = async function () {
+        showLoading();
         try {
             const newFullname = document.getElementById("new-fullname").value;
             const newAge = document.getElementById("new-age").value;
@@ -108,13 +121,20 @@
         } catch (error) {
             console.error("❌ Error updating user:", error);
         }
+        hideLoading();
     };
 
     // Delete User
     window.deleteUser = async function (id) {
-        await deleteDoc(doc(db, "users", id));
-        alert("User deleted");
-        getUsers();
+        showLoading();
+        try {
+            await deleteDoc(doc(db, "users", id));
+            alert("User deleted");
+            getUsers();
+        } catch (error) {
+            console.error("❌ Error deleting user:", error);
+        }
+        hideLoading();
     };
 
     // Close Popup
